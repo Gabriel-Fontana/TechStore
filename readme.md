@@ -1,5 +1,7 @@
 # TechStore - Projeto E-commerce
 
+<img width="1790" height="847" alt="image" src="https://github.com/user-attachments/assets/a24d2fb7-f517-4d44-b894-7efea72dcdd4" />
+
 ## Descrição
 
 Projeto de uma loja virtual simples e moderna, desenvolvido durante o bootcamp DevClub.  
@@ -43,7 +45,8 @@ Apresenta uma vitrine dinâmica de produtos eletrônicos com filtro funcional po
 
 ## Autor
 
-[Seu Nome] — [https://github.com/Gabriel-Fontana]  
+[Gabriel Fontana] — [https://github.com/Gabriel-Fontana]  
 
 ---
+
 
