@@ -1,0 +1,222 @@
+/* Reset de padding, margin e box-sizing para toda a página */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Variáveis CSS para cores usadas no site */
+:root {
+  --primary-color: #FF4111;
+  --secondary-color: #2C3E50;
+  --accent-color: #3498DB;
+  --text-color: #2C3E50;
+  --light-gray: #F8F9FA;
+  --border-color: #E9ECEF;
+  --white-color: #FFFFFF;
+  --hover-btn: rgba(255, 255, 255, 0.1);
+}
+
+/* Estilo base do corpo */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-color);
+  background-color: var(--light-gray);
+  line-height: 1.6;
+}
+
+/* Cabeçalho fixo no topo, com espaçamento e layout flex */
+.header {
+  background-color: var(--white-color);
+  position: sticky;
+  top: 0;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+}
+
+/* Logo: ícone + texto lado a lado */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  flex-shrink: 0; /* impede que a logo encolha */
+}
+.logo i {
+  font-size: 2rem;
+  color: var(--primary-color);
+}
+.logo h1 {
+  font-size: 2rem;
+  font-weight: bolder;
+}
+
+/* Container da busca, com ícone dentro */
+.search-container {
+  flex: 1; /* ocupa todo espaço disponível */
+  max-width: 500px;
+  margin: 0 auto; /* centraliza dentro do header */
+  display: flex;
+  align-items: center;
+  background-color: var(--light-gray);
+  border-radius: 1.5rem;
+  padding: 0.5rem 1rem;
+  position: relative;
+}
+.search-input {
+  width: 100%;
+  padding: 0.5rem 2.5rem 0.5rem 0.75rem; /* espaço para o ícone */
+  font-size: 1rem;
+  border: none;
+  background: none;
+  outline: none;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+.search-container i {
+  color: var(--primary-color);
+  position: absolute;
+  right: 1rem;
+}
+
+/* Menu de categorias com fundo escuro */
+.categories-container {
+  background-color: var(--secondary-color);
+  display: flex;
+  justify-content: center;
+}
+.categories-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 2rem;
+  gap: 1rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Botões das categorias */
+.category-btn {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  border: none;
+  background: none;
+  color: var(--white-color);
+  border-radius: 1.5rem;
+  cursor: pointer;
+  padding: 0.75rem 1.5rem;
+  transition: background-color 0.3s, border-radius 0.3s;
+}
+.category-btn:hover {
+  background-color: var(--primary-color);
+  border-radius: 4px;
+}
+.category-btn i {
+  font-size: 1.2rem;
+}
+
+/* Seção principal de promoção */
+.hero-section {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 81, 0, 1) 0%,
+    rgba(156, 25, 25, 1) 50%,
+    rgba(36, 20, 15, 1) 100%
+  );
+  color: var(--white-color);
+  text-align: center;
+  padding: 3rem 2rem;
+}
+.hero-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 0;
+}
+
+/* Container de produtos em grid responsivo */
+.products-container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 2rem;
+  margin: 0 auto 4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+/* Cartão individual de produto */
+.products-card {
+  background-color: var(--white-color);
+  border-radius: 1rem;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 15px;
+  transition: transform 0.5s;
+}
+.products-card:hover {
+  transform: translateY(-1rem);
+}
+
+/* Imagem do produto */
+.products-card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Informações dentro do card */
+.products-info {
+  padding: 1.5rem;
+}
+
+/* Nome do produto */
+.products-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+/* Descrição */
+.products-description {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+/* Preço em destaque */
+.products-price {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+/* Botão de ver detalhes */
+.products-button {
+  width: 100%;
+  background-color: var(--accent-color);
+  border: none;
+  padding: 0.7rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  color: white;
+}
+.products-button:hover {
+  background-color: #2980b9;
+}
+
+/* Rodapé */
+footer {
+  background-color: var(--secondary-color);
+  color: var(--white-color);
+  text-align: center;
+  padding: 2rem;
+  font-weight: 500;
+}
