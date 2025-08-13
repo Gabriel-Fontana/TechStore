@@ -1,4 +1,4 @@
-// Lista de produtos com detalhes que serão mostrados na tela
+// === Dados iniciais ===
 const produtos = [
   {
     id: 1,
@@ -82,31 +82,384 @@ const produtos = [
   }
 ];
 
-// Seleciona o container onde os produtos vão ser exibidos
+// === Elementos DOM principais ===
 const containerProdutos = document.querySelector(".products-container");
+const btnCategorias = document.querySelectorAll(".category-btn");
 
-// Função que monta o HTML dos produtos e insere no container
+// Criar modal de carrinho
+const modalCarrinho = document.createElement("div");
+modalCarrinho.id = "modal-carrinho";
+modalCarrinho.style.cssText = `
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.5);
+  display: none; justify-content: center; align-items: center;
+  z-index: 1000;
+`;
+modalCarrinho.innerHTML = `
+  <div style="
+    background:#fff; padding: 1rem; width: 90%; max-width: 500px; max-height: 80vh;
+    overflow-y: auto; border-radius: 8px; position: relative;
+  ">
+    <button id="fechar-carrinho" style="
+      position: absolute; top: 8px; right: 8px; cursor: pointer;
+      font-size: 1.5rem; border:none; background:none;">&times;</button>
+    <h2>Carrinho de Compras</h2>
+    <div id="itens-carrinho"></div>
+    <div style="margin-top: 1rem; font-weight: bold;">
+      Total: R$ <span id="total-carrinho">0.00</span>
+    </div>
+    <div style="margin-top: 1rem;">
+      <label><input type="radio" name="forma-pagamento" value="Cartão" checked /> Cartão de Crédito</label><br/>
+      <label><input type="radio" name="forma-pagamento" value="Boleto" /> Boleto Bancário</label><br/>
+      <label><input type="radio" name="forma-pagamento" value="PIX" /> PIX</label>
+    </div>
+    <div style="margin-top:1rem; font-weight: 600;">
+      Forma de Pagamento Selecionada: <span id="pagamento-selecionado">Cartão de Crédito</span>
+    </div>
+  </div>
+`;
+document.body.appendChild(modalCarrinho);
+
+// === Estado do carrinho ===
+let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+
+// Função para salvar carrinho no localStorage
+function salvarCarrinho() {
+  localStorage.setItem("carrinho", JSON.stringify(carrinho));
+}
+
+// Função para atualizar o botão "Adicionar ao Carrinho" e mostrar os produtos na tela
 function mostrarProdutos(listaProdutos) {
   let htmlprodutos = "";
-
   listaProdutos.forEach(produto => {
     htmlprodutos += `
-      <div class="products-card">
+      <div class="products-card" data-id="${produto.id}">
         <img src="${produto.imagem}" alt="${produto.nome}" />
         <div class="products-info">
           <h3 class="products-name">${produto.nome}</h3>
           <p class="products-description">${produto.descricao}</p>
           <p class="products-price">R$ ${produto.preco.toLocaleString('pt-BR')}</p>
-          <button class="products-button">Ver Detalhes</button>
+          <button class="btn-adicionar" data-id="${produto.id}">Adicionar ao Carrinho</button>
         </div>
       </div>
     `;
   });
-
   containerProdutos.innerHTML = htmlprodutos;
+
+  // Adiciona eventos para os botões "Adicionar ao Carrinho"
+  const botoesAdd = document.querySelectorAll(".btn-adicionar");
+  botoesAdd.forEach(botao => {
+    botao.addEventListener("click", () => {
+      const idProduto = parseInt(botao.dataset.id);
+      adicionarAoCarrinho(idProduto);
+    });
+  });
 }
 
-// Ao carregar a página, mostra todos os produtos inicialmente
+// Função para adicionar produto ao carrinho
+function adicionarAoCarrinho(idProduto) {
+  const produtoExistente = carrinho.find(item => item.id === idProduto);
+  if (produtoExistente) {
+    produtoExistente.quantidade++;
+  } else {
+    const produto = produtos.find(p => p.id === idProduto);
+    carrinho.push({ ...produto, quantidade: 1 });
+  }
+  salvarCarrinho();
+  alert("Produto adicionado ao carrinho!");
+  atualizarResumoCarrinho();
+}
+
+// Função para atualizar o resumo do carrinho e mostrar modal
+function atualizarResumoCarrinho() {
+  const itensCarrinhoContainer = document.getElementById("itens-carrinho");
+  const totalCarrinhoSpan = document.getElementById("total-carrinho");
+  const pagamentoSelecionadoSpan = document.getElementById("pagamento-selecionado");
+
+  if (!itensCarrinhoContainer || !totalCarrinhoSpan) return;
+
+  if (carrinho.length === 0) {
+    itensCarrinhoContainer.innerHTML = "<p>Carrinho vazio.</p>";
+    totalCarrinhoSpan.textContent = "0.00";
+    return;
+  }
+
+  let htmlItens = "";
+  let total = 0;
+
+  carrinho.forEach(item => {
+    const subtotal = item.preco * item.quantidade;
+    total += subtotal;
+
+    htmlItens += `
+      <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 10px;">
+        <div>
+          <strong>${item.nome}</strong><br />
+          R$ ${item.preco.toLocaleString('pt-BR')} x 
+          <input type="number" min="1" value="${item.quantidade}" data-id="${item.id}" class="input-quantidade" style="width: 50px;" />
+          = R$ ${subtotal.toLocaleString('pt-BR')}
+        </div>
+        <button data-id="${item.id}" class="btn-remover" style="background:#FF4111; border:none; color:#fff; border-radius: 5px; cursor:pointer; padding: 4px 8px;">Remover</button>
+      </div>
+    `;
+  });
+
+  itensCarrinhoContainer.innerHTML = htmlItens;
+  totalCarrinhoSpan.textContent = total.toLocaleString('pt-BR');
+
+  // Atualiza forma de pagamento selecionada no resumo
+  const formaPagamento = document.querySelector('input[name="forma-pagamento"]:checked');
+  if (formaPagamento) {
+    pagamentoSelecionadoSpan.textContent = formaPagamento.value;
+  }
+
+  // Adiciona evento para remover item
+  document.querySelectorAll(".btn-remover").forEach(botao => {
+    botao.addEventListener("click", () => {
+      const id = parseInt(botao.dataset.id);
+      removerDoCarrinho(id);
+    });
+  });
+
+  // Evento para alterar quantidade
+  document.querySelectorAll(".input-quantidade").forEach(input => {
+    input.addEventListener("change", e => {
+      const novaQtde = parseInt(e.target.value);
+      const id = parseInt(e.target.dataset.id);
+      if (novaQtde < 1) {
+        e.target.value = 1;
+        return;
+      }
+      alterarQuantidade(id, novaQtde);
+    });
+  });
+
+  // Evento mudança na forma de pagamento
+  document.querySelectorAll('input[name="forma-pagamento"]').forEach(radio => {
+    radio.addEventListener("change", () => {
+      pagamentoSelecionadoSpan.textContent = document.querySelector('input[name="forma-pagamento"]:checked').value;
+    });
+  });
+}
+
+// Função remover produto do carrinho
+function removerDoCarrinho(idProduto) {
+  carrinho = carrinho.filter(item => item.id !== idProduto);
+  salvarCarrinho();
+  atualizarResumoCarrinho();
+}
+
+// Alterar quantidade no carrinho
+function alterarQuantidade(idProduto, novaQtde) {
+  const item = carrinho.find(i => i.id === idProduto);
+  if (item) {
+    item.quantidade = novaQtde;
+    salvarCarrinho();
+    atualizarResumoCarrinho();
+  }
+}
+
+// Mostrar modal carrinho
+function mostrarModalCarrinho() {
+  modalCarrinho.style.display = "flex";
+  atualizarResumoCarrinho();
+}
+
+// Fechar modal carrinho
+document.getElementById("fechar-carrinho").addEventListener("click", () => {
+  modalCarrinho.style.display = "none";
+});
+
+// Abrir modal carrinho ao clicar no botão de carrinho no header
+// Como não tem botão de carrinho no header ainda, vamos criar um
+const btnAbrirCarrinho = document.createElement("button");
+btnAbrirCarrinho.id = "btn-carrinho-header";
+btnAbrirCarrinho.textContent = "Carrinho (0)";
+btnAbrirCarrinho.style.cssText = `
+  position: fixed; top: 1rem; right: 1rem; background: var(--primary-color); color: white;
+  border:none; padding: 0.7rem 1rem; border-radius: 6px; cursor:pointer; z-index: 1000;
+`;
+document.body.appendChild(btnAbrirCarrinho);
+
+btnAbrirCarrinho.addEventListener("click", () => {
+  mostrarModalCarrinho();
+});
+
+// Atualiza o número de itens no botão do header
+function atualizarContadorCarrinho() {
+  const totalQtde = carrinho.reduce((acc, item) => acc + item.quantidade, 0);
+  btnAbrirCarrinho.textContent = `Carrinho (${totalQtde})`;
+}
+
+// === Filtro por categoria ===
+btnCategorias.forEach(botao => {
+  botao.addEventListener("click", () => {
+    const categoria = botao.dataset.category;
+    if (categoria === "all") {
+      mostrarProdutos(produtos);
+    } else {
+      const filtrados = produtos.filter(p => p.categoria === categoria);
+      mostrarProdutos(filtrados);
+    }
+  });
+});
+
+// === Login Simulado ===
+
+// Criar modal login
+const modalLogin = document.createElement("div");
+modalLogin.id = "modal-login";
+modalLogin.style.cssText = `
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.5);
+  display: none; justify-content: center; align-items: center;
+  z-index: 1001;
+`;
+modalLogin.innerHTML = `
+  <div style="
+    background:#fff; padding: 2rem; border-radius: 10px; width: 90%; max-width: 400px; position: relative;
+  ">
+    <button id="fechar-login" style="
+      position: absolute; top: 10px; right: 10px; border:none; background:none; font-size: 1.5rem; cursor:pointer;
+    ">&times;</button>
+    <h2>Login / Criar Conta</h2>
+    <form id="form-login">
+      <label for="login-usuario">Usuário</label><br/>
+      <input type="text" id="login-usuario" required style="width: 100%; padding: 0.5rem; margin-bottom: 1rem;" /><br/>
+      <label for="login-senha">Senha</label><br/>
+      <input type="password" id="login-senha" required style="width: 100%; padding: 0.5rem; margin-bottom: 1rem;" /><br/>
+      <button type="submit" style="
+        background: var(--primary-color); color: white; border:none; padding: 0.7rem 1rem; cursor:pointer; border-radius: 5px;
+      ">Entrar</button>
+    </form>
+    <button id="btn-criar-conta" style="
+      margin-top: 1rem; background: var(--accent-color); color: white; border:none; padding: 0.7rem 1rem; cursor:pointer; border-radius: 5px;
+    ">Criar Conta</button>
+    <p id="msg-login" style="color:red; margin-top: 1rem;"></p>
+  </div>
+`;
+document.body.appendChild(modalLogin);
+
+// Abrir modal login ao clicar no logo (exemplo)
+document.querySelector(".logo").addEventListener("click", () => {
+  modalLogin.style.display = "flex";
+});
+
+// Fechar modal login
+document.getElementById("fechar-login").addEventListener("click", () => {
+  modalLogin.style.display = "none";
+  limparMsgLogin();
+});
+
+// Limpar mensagem de login
+function limparMsgLogin() {
+  document.getElementById("msg-login").textContent = "";
+}
+
+// Usuários simulados no localStorage (armazenados como {usuario: senha})
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || {};
+
+// Criar conta
+document.getElementById("btn-criar-conta").addEventListener("click", () => {
+  const user = document.getElementById("login-usuario").value.trim();
+  const pass = document.getElementById("login-senha").value.trim();
+
+  if (user.length < 3 || pass.length < 3) {
+    document.getElementById("msg-login").textContent = "Usuário e senha devem ter pelo menos 3 caracteres.";
+    return;
+  }
+  if (usuarios[user]) {
+    document.getElementById("msg-login").textContent = "Usuário já existe.";
+    return;
+  }
+  usuarios[user] = pass;
+  localStorage.setItem("usuarios", JSON.stringify(usuarios));
+  document.getElementById("msg-login").textContent = "Conta criada com sucesso! Agora faça login.";
+  limparCamposLogin();
+});
+
+// Login
+document.getElementById("form-login").addEventListener("submit", e => {
+  e.preventDefault();
+  const user = document.getElementById("login-usuario").value.trim();
+  const pass = document.getElementById("login-senha").value.trim();
+
+  if (usuarios[user] && usuarios[user] === pass) {
+    document.getElementById("msg-login").style.color = "green";
+    document.getElementById("msg-login").textContent = `Bem-vindo, ${user}!`;
+    // Salvar usuário logado no sessionStorage
+    sessionStorage.setItem("usuarioLogado", user);
+    limparCamposLogin();
+    setTimeout(() => {
+      modalLogin.style.display = "none";
+      limparMsgLogin();
+      atualizarUIUsuario();
+    }, 1500);
+  } else {
+    document.getElementById("msg-login").style.color = "red";
+    document.getElementById("msg-login").textContent = "Usuário ou senha inválidos.";
+  }
+});
+
+// Limpar campos do login
+function limparCamposLogin() {
+  document.getElementById("login-usuario").value = "";
+  document.getElementById("login-senha").value = "";
+}
+
+// Atualizar UI após login (exemplo: mostrar nome do usuário na logo)
+function atualizarUIUsuario() {
+  const usuario = sessionStorage.getItem("usuarioLogado");
+  if (usuario) {
+    document.querySelector(".logo h1").textContent = `TechStore - Olá, ${usuario}`;
+  } else {
+    document.querySelector(".logo h1").textContent = "TechStore";
+  }
+}
+
+// Chamada inicial para mostrar todos os produtos e atualizar contador do carrinho
 window.onload = () => {
   mostrarProdutos(produtos);
+  atualizarContadorCarrinho();
+  atualizarUIUsuario();
 };
+
+// Atualizar contador de itens no carrinho sempre que carrinho mudar
+function atualizarContadorCarrinho() {
+  const totalQtde = carrinho.reduce((acc, item) => acc + item.quantidade, 0);
+  btnAbrirCarrinho.textContent = `Carrinho (${totalQtde})`;
+}
+
+// Modifica o contador sempre que o carrinho for atualizado
+function adicionarAoCarrinho(idProduto) {
+  const produtoExistente = carrinho.find(item => item.id === idProduto);
+  if (produtoExistente) {
+    produtoExistente.quantidade++;
+  } else {
+    const produto = produtos.find(p => p.id === idProduto);
+    carrinho.push({ ...produto, quantidade: 1 });
+  }
+  salvarCarrinho();
+  alert("Produto adicionado ao carrinho!");
+  atualizarResumoCarrinho();
+  atualizarContadorCarrinho();
+}
+
+// Atualiza carrinho após remoção ou quantidade alterada
+function removerDoCarrinho(idProduto) {
+  carrinho = carrinho.filter(item => item.id !== idProduto);
+  salvarCarrinho();
+  atualizarResumoCarrinho();
+  atualizarContadorCarrinho();
+}
+
+// Atualizar quantidade do produto no carrinho
+function alterarQuantidade(idProduto, novaQtde) {
+  const item = carrinho.find(i => i.id === idProduto);
+  if (item) {
+    item.quantidade = novaQtde;
+    salvarCarrinho();
+    atualizarResumoCarrinho();
+    atualizarContadorCarrinho();
+  }
+}
