@@ -212,6 +212,172 @@ body {
   background-color: #2980b9;
 }
 
+/* Botão adicionar ao carrinho estilizado */
+.btn-adicionar {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(255, 65, 17, 0.4);
+}
+.btn-adicionar:hover {
+  background-color: #e03a00;
+  box-shadow: 0 6px 12px rgba(224, 58, 0, 0.6);
+}
+
+/* Botão carrinho no topo */
+#btn-carrinho-header {
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(255, 65, 17, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+#btn-carrinho-header:hover {
+  background-color: #e03a00;
+  box-shadow: 0 6px 14px rgba(224, 58, 0, 0.8);
+}
+
+/* Modal: Conteúdo do carrinho melhorado */
+#modal-carrinho > div {
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+/* Item do carrinho estilizado */
+.item-carrinho {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 1rem;
+}
+.item-carrinho img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.item-carrinho-info {
+  flex: 1;
+}
+.item-carrinho-info strong {
+  font-size: 1.1rem;
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--text-color);
+}
+.item-carrinho-preco {
+  color: var(--primary-color);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.item-carrinho-quantidade {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.item-carrinho-quantidade input {
+  width: 50px;
+  padding: 0.3rem;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+.item-carrinho-remover {
+  background-color: #FF4111;
+  border: none;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.item-carrinho-remover:hover {
+  background-color: #cc3600;
+}
+
+/* Modal produto detalhes */
+#modal-produto {
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.5);
+  display: none; justify-content: center; align-items: center;
+  z-index: 1002;
+}
+#modal-produto > div {
+  background: white;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  position: relative;
+  overflow-y: auto;
+  max-height: 85vh;
+}
+#modal-produto img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+#modal-produto h3 {
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+#modal-produto p {
+  color: #555;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+#modal-produto .preco {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+#modal-produto button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+#modal-produto button:hover {
+  background-color: #e03a00;
+}
+#modal-produto .fechar {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 1.8rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #999;
+  transition: color 0.3s ease;
+}
+#modal-produto .fechar:hover {
+  color: #333;
+}
+
 /* Rodapé */
 footer {
   background-color: var(--secondary-color);
