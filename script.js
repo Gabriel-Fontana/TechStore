@@ -85,6 +85,7 @@ const produtos = [
 // === Elementos DOM principais ===
 const containerProdutos = document.querySelector(".products-container");
 const btnCategorias = document.querySelectorAll(".category-btn");
+const inputBusca = document.querySelector(".search-input");
 
 // Criar modal de carrinho
 const modalCarrinho = document.createElement("div");
@@ -128,7 +129,7 @@ function salvarCarrinho() {
   localStorage.setItem("carrinho", JSON.stringify(carrinho));
 }
 
-// Função para atualizar o botão "Adicionar ao Carrinho" e mostrar os produtos na tela
+// Função para mostrar produtos na tela
 function mostrarProdutos(listaProdutos) {
   let htmlprodutos = "";
   listaProdutos.forEach(produto => {
@@ -168,9 +169,10 @@ function adicionarAoCarrinho(idProduto) {
   salvarCarrinho();
   alert("Produto adicionado ao carrinho!");
   atualizarResumoCarrinho();
+  atualizarContadorCarrinho();
 }
 
-// Função para atualizar o resumo do carrinho e mostrar modal
+// Função para atualizar resumo do carrinho e mostrar modal
 function atualizarResumoCarrinho() {
   const itensCarrinhoContainer = document.getElementById("itens-carrinho");
   const totalCarrinhoSpan = document.getElementById("total-carrinho");
@@ -247,6 +249,7 @@ function removerDoCarrinho(idProduto) {
   carrinho = carrinho.filter(item => item.id !== idProduto);
   salvarCarrinho();
   atualizarResumoCarrinho();
+  atualizarContadorCarrinho();
 }
 
 // Alterar quantidade no carrinho
@@ -256,6 +259,7 @@ function alterarQuantidade(idProduto, novaQtde) {
     item.quantidade = novaQtde;
     salvarCarrinho();
     atualizarResumoCarrinho();
+    atualizarContadorCarrinho();
   }
 }
 
@@ -270,8 +274,7 @@ document.getElementById("fechar-carrinho").addEventListener("click", () => {
   modalCarrinho.style.display = "none";
 });
 
-// Abrir modal carrinho ao clicar no botão de carrinho no header
-// Como não tem botão de carrinho no header ainda, vamos criar um
+// Criar botão carrinho no header
 const btnAbrirCarrinho = document.createElement("button");
 btnAbrirCarrinho.id = "btn-carrinho-header";
 btnAbrirCarrinho.textContent = "Carrinho (0)";
@@ -302,6 +305,21 @@ btnCategorias.forEach(botao => {
       mostrarProdutos(filtrados);
     }
   });
+});
+
+// === Busca de produtos ===
+inputBusca.addEventListener("input", () => {
+  const textoBusca = inputBusca.value.trim().toLowerCase();
+
+  if (textoBusca === "") {
+    mostrarProdutos(produtos); // mostra todos se busca vazia
+  } else {
+    const produtosFiltrados = produtos.filter(produto =>
+      produto.nome.toLowerCase().includes(textoBusca) ||
+      produto.descricao.toLowerCase().includes(textoBusca)
+    );
+    mostrarProdutos(produtosFiltrados);
+  }
 });
 
 // === Login Simulado ===
@@ -348,118 +366,48 @@ document.querySelector(".logo").addEventListener("click", () => {
 // Fechar modal login
 document.getElementById("fechar-login").addEventListener("click", () => {
   modalLogin.style.display = "none";
-  limparMsgLogin();
-});
-
-// Limpar mensagem de login
-function limparMsgLogin() {
   document.getElementById("msg-login").textContent = "";
-}
-
-// Usuários simulados no localStorage (armazenados como {usuario: senha})
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || {};
-
-// Criar conta
-document.getElementById("btn-criar-conta").addEventListener("click", () => {
-  const user = document.getElementById("login-usuario").value.trim();
-  const pass = document.getElementById("login-senha").value.trim();
-
-  if (user.length < 3 || pass.length < 3) {
-    document.getElementById("msg-login").textContent = "Usuário e senha devem ter pelo menos 3 caracteres.";
-    return;
-  }
-  if (usuarios[user]) {
-    document.getElementById("msg-login").textContent = "Usuário já existe.";
-    return;
-  }
-  usuarios[user] = pass;
-  localStorage.setItem("usuarios", JSON.stringify(usuarios));
-  document.getElementById("msg-login").textContent = "Conta criada com sucesso! Agora faça login.";
-  limparCamposLogin();
 });
 
-// Login
-document.getElementById("form-login").addEventListener("submit", e => {
-  e.preventDefault();
-  const user = document.getElementById("login-usuario").value.trim();
-  const pass = document.getElementById("login-senha").value.trim();
+// Array simples de usuários simulados
+const usuarios = [
+  { usuario: "admin", senha: "123456" }
+];
 
-  if (usuarios[user] && usuarios[user] === pass) {
-    document.getElementById("msg-login").style.color = "green";
-    document.getElementById("msg-login").textContent = `Bem-vindo, ${user}!`;
-    // Salvar usuário logado no sessionStorage
-    sessionStorage.setItem("usuarioLogado", user);
-    limparCamposLogin();
-    setTimeout(() => {
-      modalLogin.style.display = "none";
-      limparMsgLogin();
-      atualizarUIUsuario();
-    }, 1500);
+// Submeter formulário login
+document.getElementById("form-login").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const usuarioInput = document.getElementById("login-usuario").value.trim();
+  const senhaInput = document.getElementById("login-senha").value;
+
+  const usuarioEncontrado = usuarios.find(u => u.usuario === usuarioInput && u.senha === senhaInput);
+
+  if (usuarioEncontrado) {
+    alert("Login efetuado com sucesso!");
+    modalLogin.style.display = "none";
+    document.getElementById("msg-login").textContent = "";
   } else {
-    document.getElementById("msg-login").style.color = "red";
     document.getElementById("msg-login").textContent = "Usuário ou senha inválidos.";
   }
 });
 
-// Limpar campos do login
-function limparCamposLogin() {
-  document.getElementById("login-usuario").value = "";
-  document.getElementById("login-senha").value = "";
-}
+// Criar conta simulada (apenas adiciona no array)
+document.getElementById("btn-criar-conta").addEventListener("click", () => {
+  const usuarioInput = prompt("Digite o nome de usuário:");
+  if (!usuarioInput) return alert("Usuário inválido.");
 
-// Atualizar UI após login (exemplo: mostrar nome do usuário na logo)
-function atualizarUIUsuario() {
-  const usuario = sessionStorage.getItem("usuarioLogado");
-  if (usuario) {
-    document.querySelector(".logo h1").textContent = `TechStore - Olá, ${usuario}`;
-  } else {
-    document.querySelector(".logo h1").textContent = "TechStore";
+  const senhaInput = prompt("Digite a senha:");
+  if (!senhaInput) return alert("Senha inválida.");
+
+  const existeUsuario = usuarios.find(u => u.usuario === usuarioInput);
+  if (existeUsuario) {
+    return alert("Usuário já existe.");
   }
-}
 
-// Chamada inicial para mostrar todos os produtos e atualizar contador do carrinho
-window.onload = () => {
-  mostrarProdutos(produtos);
-  atualizarContadorCarrinho();
-  atualizarUIUsuario();
-};
+  usuarios.push({ usuario: usuarioInput, senha: senhaInput });
+  alert("Conta criada com sucesso!");
+});
 
-// Atualizar contador de itens no carrinho sempre que carrinho mudar
-function atualizarContadorCarrinho() {
-  const totalQtde = carrinho.reduce((acc, item) => acc + item.quantidade, 0);
-  btnAbrirCarrinho.textContent = `Carrinho (${totalQtde})`;
-}
-
-// Modifica o contador sempre que o carrinho for atualizado
-function adicionarAoCarrinho(idProduto) {
-  const produtoExistente = carrinho.find(item => item.id === idProduto);
-  if (produtoExistente) {
-    produtoExistente.quantidade++;
-  } else {
-    const produto = produtos.find(p => p.id === idProduto);
-    carrinho.push({ ...produto, quantidade: 1 });
-  }
-  salvarCarrinho();
-  alert("Produto adicionado ao carrinho!");
-  atualizarResumoCarrinho();
-  atualizarContadorCarrinho();
-}
-
-// Atualiza carrinho após remoção ou quantidade alterada
-function removerDoCarrinho(idProduto) {
-  carrinho = carrinho.filter(item => item.id !== idProduto);
-  salvarCarrinho();
-  atualizarResumoCarrinho();
-  atualizarContadorCarrinho();
-}
-
-// Atualizar quantidade do produto no carrinho
-function alterarQuantidade(idProduto, novaQtde) {
-  const item = carrinho.find(i => i.id === idProduto);
-  if (item) {
-    item.quantidade = novaQtde;
-    salvarCarrinho();
-    atualizarResumoCarrinho();
-    atualizarContadorCarrinho();
-  }
-}
+// === Inicialização ===
+mostrarProdutos(produtos);
+atualizarContadorCarrinho();
