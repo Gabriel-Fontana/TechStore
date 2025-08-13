@@ -1,49 +1,31 @@
 TechStore - Projeto E-commerce
 <img width="1888" height="841" alt="TechStore screenshot" src="https://github.com/user-attachments/assets/05992c2e-77f7-484f-8566-918f61e2cef9" />
-Descrição
-Loja virtual simples e moderna criada no bootcamp DevClub.
-Exibe produtos eletrônicos com filtro por categoria, design responsivo e interação básica usando HTML, CSS e JavaScript.
+Sobre o projeto
+TechStore é uma loja virtual responsiva e moderna, desenvolvida em 7 dias durante o bootcamp DevClub.
+Construída com HTML, CSS e JavaScript puro, exibe produtos eletrônicos com filtro por categoria e busca integrada.
 
-Inclui um carrinho de compras simples para estudo, que permite adicionar, visualizar e remover produtos.
+Adicionamos um carrinho de compras simples para estudos, permitindo adicionar, visualizar e remover itens com atualização dinâmica do total.
 
-Os produtos mostram informações essenciais: nome, preço (com desconto), categoria e descrição breve, facilitando a escolha do usuário.
+Funcionalidades principais
+Renderização dinâmica com dados essenciais dos produtos
 
-Funcionalidades
-Produtos renderizados dinamicamente via JavaScript
+Filtro por categoria e busca rápida
 
-Filtro por categorias e busca por nome
+Layout responsivo para todos dispositivos
 
-Layout responsivo
+Carrinho de compras básico com controle de itens e total atualizado
 
-Ícones Font Awesome
-
-Animações simples
-
-Carrinho de compras básico com gerenciamento de itens e total
+Interface limpa, com ícones Font Awesome e animações sutis
 
 Tecnologias
-HTML5
+HTML5 | CSS3 (Flexbox, Grid) | JavaScript (DOM & Eventos) | Font Awesome
 
-CSS3 (Flexbox, Grid, variáveis)
-
-JavaScript (DOM e eventos)
-
-Font Awesome
-
-Como usar
-Clone ou baixe o repositório.
-
-Abra no VSCode.
-
-Execute index.html no navegador.
-
-Use filtros, busca e o carrinho para testar.
+Uso
+Clone o repositório, abra index.html no navegador e explore filtros, busca e carrinho.
 
 Próximos passos
-Página de detalhes
+Detalhes do produto, backend, checkout e melhorias em acessibilidade.
 
-Backend e autenticação
+Autor
+Gabriel Fontana
 
-Pagamento e finalização
-
-Acessibilidade e SEO
