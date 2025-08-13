@@ -1,66 +1,49 @@
 TechStore - Projeto E-commerce
-<img width="1790" height="847" alt="image" src="<img width="1888" height="841" alt="image" src="https://github.com/user-attachments/assets/05992c2e-77f7-484f-8566-918f61e2cef9" />
-" />
+<img width="1888" height="841" alt="TechStore screenshot" src="https://github.com/user-attachments/assets/05992c2e-77f7-484f-8566-918f61e2cef9" />
 Descrição
-Projeto de uma loja virtual simples e moderna, desenvolvido durante o bootcamp DevClub.
-Apresenta uma vitrine dinâmica de produtos eletrônicos com filtro funcional por categorias, design responsivo e interação básica utilizando HTML, CSS e JavaScript puro.
+Loja virtual simples e moderna criada no bootcamp DevClub.
+Exibe produtos eletrônicos com filtro por categoria, design responsivo e interação básica usando HTML, CSS e JavaScript.
 
-Foi implementado também um carrinho de compras simples, ideal para estudos, que permite adicionar, visualizar e remover produtos de forma prática.
+Inclui um carrinho de compras simples para estudo, que permite adicionar, visualizar e remover produtos.
 
-As informações dos produtos são apresentadas de maneira simples e profissional, contemplando os dados essenciais como nome, preço (com destaque para desconto), categoria e uma descrição sucinta, facilitando a compreensão e a decisão de compra pelo usuário.
+Os produtos mostram informações essenciais: nome, preço (com desconto), categoria e descrição breve, facilitando a escolha do usuário.
 
 Funcionalidades
-Renderização dinâmica dos produtos a partir de um array em JavaScript com informações objetivas e profissionais (nome, descrição breve, preço, desconto, categoria e imagem)
+Produtos renderizados dinamicamente via JavaScript
 
-Filtro funcional por categorias para facilitar a navegação
+Filtro por categorias e busca por nome
 
-Layout responsivo para dispositivos móveis e desktops
+Layout responsivo
 
-Botões e ícones usando Font Awesome
+Ícones Font Awesome
 
-Animações simples em cards de produtos
+Animações simples
 
-Carrinho de compras simples: permite adicionar produtos, atualizar quantidades, visualizar itens selecionados e remover produtos do carrinho
-
-Atualização dinâmica do total do carrinho
+Carrinho de compras básico com gerenciamento de itens e total
 
 Tecnologias
 HTML5
 
-CSS3 (variáveis CSS, flexbox e grid)
+CSS3 (Flexbox, Grid, variáveis)
 
-JavaScript (DOM, manipulação de eventos e gerenciamento simples de estado)
+JavaScript (DOM e eventos)
 
 Font Awesome
 
 Como usar
-Clone ou baixe este repositório.
+Clone ou baixe o repositório.
 
-Abra a pasta do projeto no VSCode.
+Abra no VSCode.
 
-Abra o arquivo index.html em um navegador (Google Chrome recomendado).
+Execute index.html no navegador.
 
-Navegue pelos produtos, use o filtro de categorias e adicione produtos ao carrinho para testar a funcionalidade.
-
-Estrutura do projeto
-index.html — estrutura principal da página
-
-style.css — estilos do site
-
-script.js — lógica para renderizar produtos, filtro e carrinho
-
-README.md — este arquivo
+Use filtros, busca e o carrinho para testar.
 
 Próximos passos
-Implementar busca por nome de produto
+Página de detalhes
 
-Criar página de detalhes dos produtos
+Backend e autenticação
 
-Integrar com backend para persistência de dados e autenticação
+Pagamento e finalização
 
-Implementar métodos de pagamento e finalização de compra
-
-Melhorar acessibilidade e SEO
-
-Autor
-[Gabriel Fontana] — [https://github.com/Gabriel-Fontana]
+Acessibilidade e SEO
